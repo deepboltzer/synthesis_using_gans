@@ -6,7 +6,7 @@ output discriminator: scalar prob. that the input is frim the real data distr.
 discriminator strucutre: The discriminator is made up of strided convolution layers, batch norm layers, and LeakyReLU activations.
 
 input generator: latent vaector z, drawn from standard gaussian.
-output generator: 3x64x64 RGB image
+output generator: 3xngfxngf RGB image
 generator structure: The generator is comprised of convolutional-transpose layers, batch norm layers, and ReLU activations.
 
 Why do we use strided conv-transpose? 
@@ -419,6 +419,7 @@ for epoch in range(opt.niter):
     torch.save(netG.state_dict(), '%s/netG_epoch_%d.pth' % (opt.outf, epoch))
     torch.save(netD.state_dict(), '%s/netD_epoch_%d.pth' % (opt.outf, epoch))
 
+# plot the losses of the generator and the discriminator
 plt.figure(figsize=(10,5))
 plt.title("Generator and Discriminator Loss During Training")
 plt.plot(G_losses,label="G")
@@ -430,11 +431,13 @@ plt.show()
 plt.savefig('%s/plots/losses.png' % (opt.outf))
 
 #%%capture
+Writer = animation.writers['ffmpeg']
+writer = Writer(fps=15, metadata=dict(artist='dcgan'), bitrate=1800)
 fig = plt.figure(figsize=(8,8))
 plt.axis("off")
 ims = [[plt.imshow(np.transpose(i,(1,2,0)), animated=True)] for i in img_list]
 ani = animation.ArtistAnimation(fig, ims, interval=1000, repeat_delay=1000, blit=True)
-
+ani.save('%s/plots/losses.png' % (opt.outf),writer=writer)
 HTML(ani.to_jshtml())
 
 # Grab a batch of real images from the dataloader
@@ -446,10 +449,10 @@ plt.subplot(1,2,1)
 plt.axis("off")
 plt.title("Real Images")
 plt.imshow(np.transpose(vutils.make_grid(real_batch[0].to(device)[:64], padding=5, normalize=True).cpu(),(1,2,0)))
-
 # Plot the fake images from the last epoch
 plt.subplot(1,2,2)
 plt.axis("off")
 plt.title("Fake Images")
 plt.imshow(np.transpose(img_list[-1],(1,2,0)))
 plt.show()
+plt.savefig('%s/plots/real_vs_fake_images.png' % (opt.outf))
