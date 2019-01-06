@@ -1,7 +1,7 @@
 '''
 A dcgan on different datasets. 
 
-input discriminator: 3x64x64
+input discriminator: 3xndfxndf
 output discriminator: scalar prob. that the input is frim the real data distr.
 discriminator strucutre: The discriminator is made up of strided convolution layers, batch norm layers, and LeakyReLU activations.
 
@@ -32,6 +32,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from IPython.display import HTML
+from sklearn import svm
 
 '''
 ---------------------------
@@ -263,6 +264,7 @@ class Discriminator(nn.Module):
 
     def forward(self, input):
         return self.main(input)
+    
 
 # Create the Discriminator
 netD = Discriminator(ngpu).to(device)
@@ -418,6 +420,20 @@ for epoch in range(opt.niter):
     # do checkpointing
     torch.save(netG.state_dict(), '%s/netG_epoch_%d.pth' % (opt.outf, epoch))
     torch.save(netD.state_dict(), '%s/netD_epoch_%d.pth' % (opt.outf, epoch))
+
+
+# Generate a SVM. This SVM should use output of the conv2d layers as input and do classification
+
+class SVM():
+    def __init__(self):
+        super(SVM, self).__init__()
+        self.lin_clf = svm.LinearSVC()   
+    def forward(self, input, classes):
+        return self.lin_clf(input,classes)
+    def predict(self,test):
+        return self.lin_clf.predict(test)
+    def accuracy(self,test,true_labels):
+        return self.lin_clf.score(test,true_labels)
 
 # plot the losses of the generator and the discriminator
 plt.figure(figsize=(10,5))
