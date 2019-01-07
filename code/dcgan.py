@@ -230,7 +230,7 @@ print(netG)
 define the discriminator
 ---------------------------
 As mentioned, the discriminator, D, is a binary classification network that takes an image as input and outputs a scalar probability 
-that the input image is real (as opposed to fake). Here, D takes a 3x64x64 input image, processes it through a series of Conv2d, BatchNorm2d, 
+that the input image is real (as opposed to fake). Here, D takes a 3xndfxndf input image, processes it through a series of Conv2d, BatchNorm2d, 
 and LeakyReLU layers, and outputs the final probability through a Sigmoid activation function. This architecture can be extended with more layers 
 if necessary for the problem, but there is significance to the use of the strided convolution, BatchNorm, and LeakyReLUs. The DCGAN paper mentions 
 it is a good practice to use strided convolution rather than pooling to downsample because it lets the network learn its own pooling function. 
@@ -409,10 +409,10 @@ for epoch in range(opt.niter):
             with torch.no_grad():
                 fake = netG(fixed_noise).detach().cpu()
                 vutils.save_image(real_cpu,
-                    '%s/real_samples.png' % opt.outf,
+                    '%s/plots/real_samples.png' % opt.outf,
                     normalize=True)
                 vutils.save_image(fake.detach(),
-                    '%s/fake_samples_epoch_%03d.png' % (opt.outf, epoch),
+                    '%s/plots/fake_samples_epoch_%03d.png' % (opt.outf, epoch),
                 normalize=True)
             img_list.append(vutils.make_grid(fake, padding=2, normalize=True))
 
@@ -453,7 +453,7 @@ fig = plt.figure(figsize=(8,8))
 plt.axis("off")
 ims = [[plt.imshow(np.transpose(i,(1,2,0)), animated=True)] for i in img_list]
 ani = animation.ArtistAnimation(fig, ims, interval=1000, repeat_delay=1000, blit=True)
-ani.save('%s/plots/losses.png' % (opt.outf),writer=writer)
+ani.save('%s/plots/training_progress.mp4' % (opt.outf),writer=writer)
 HTML(ani.to_jshtml())
 
 # Grab a batch of real images from the dataloader
