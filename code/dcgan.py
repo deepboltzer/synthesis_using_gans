@@ -213,7 +213,7 @@ class Generator(nn.Module):
 
 # Create the generator
 netG = Generator(ngpu).to(device)
-print(device)
+
 # Handle multi-gpu if desired
 if (device.type == 'cuda') and (ngpu > 1):
     netG = nn.DataParallel(netG, list(range(ngpu)))
