@@ -12,7 +12,6 @@ generator structure: The generator is comprised of convolutional-transpose layer
 Why do we use strided conv-transpose? 
 The strided conv-transpose layers allow the latent vector to be transformed into a volume with the same shape as an image.
 '''
-sys.path('../../torch')
 # load libraries
 from __future__ import print_function
 #%matplotlib inline
