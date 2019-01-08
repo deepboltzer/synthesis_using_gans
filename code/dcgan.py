@@ -418,8 +418,8 @@ for epoch in range(opt.niter):
 
         iters += 1
     # do checkpointing
-    torch.save(netG.state_dict(), '%s/netG_epoch_%d.pth' % (opt.outf, epoch))
-    torch.save(netD.state_dict(), '%s/netD_epoch_%d.pth' % (opt.outf, epoch))
+    torch.save(netG.state_dict(), '%s/models/netG_epoch_%d.pth' % (opt.outf, epoch))
+    torch.save(netD.state_dict(), '%s/models/netD_epoch_%d.pth' % (opt.outf, epoch))
 
 
 # Generate a SVM. This SVM should use output of the conv2d layers as input and do classification
@@ -447,6 +447,7 @@ plt.show()
 plt.savefig('%s/plots/losses.png' % (opt.outf))
 
 #%%capture
+'''
 Writer = animation.writers['ffmpeg']
 writer = Writer(fps=15, metadata=dict(artist='dcgan'), bitrate=1800)
 fig = plt.figure(figsize=(8,8))
@@ -455,7 +456,7 @@ ims = [[plt.imshow(np.transpose(i,(1,2,0)), animated=True)] for i in img_list]
 ani = animation.ArtistAnimation(fig, ims, interval=1000, repeat_delay=1000, blit=True)
 ani.save('%s/plots/training_progress.mp4' % (opt.outf),writer=writer)
 HTML(ani.to_jshtml())
-
+'''
 # Grab a batch of real images from the dataloader
 real_batch = next(iter(dataloader))
 
