@@ -18,7 +18,7 @@ from __future__ import print_function
 import argparse
 import os
 import random
-import torchls
+import torch
 
 import torch.nn as nn
 import torch.nn.parallel
