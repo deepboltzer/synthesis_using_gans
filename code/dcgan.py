@@ -418,8 +418,8 @@ for epoch in range(opt.niter):
 
         iters += 1
     # do checkpointing
-    torch.save(netG.state_dict(), '%s/models/netG_epoch_%d.pth' % (opt.outf, epoch))
-    torch.save(netD.state_dict(), '%s/models/netD_epoch_%d.pth' % (opt.outf, epoch))
+    torch.save(netG.state_dict(), '%s/models/netG_epoch_%d_run2.pth' % (opt.outf, epoch))
+    torch.save(netD.state_dict(), '%s/models/netD_epoch_%d_run2.pth' % (opt.outf, epoch))
 
 
 # Generate a SVM. This SVM should use output of the conv2d layers as input and do classification
@@ -444,7 +444,7 @@ plt.xlabel("iterations")
 plt.ylabel("Loss")
 plt.legend()
 plt.show()
-plt.savefig('%s/plots/losses.png' % (opt.outf))
+plt.savefig('%s/img/plots/losses.png' % (opt.outf))
 
 #%%capture
 '''
@@ -472,4 +472,4 @@ plt.axis("off")
 plt.title("Fake Images")
 plt.imshow(np.transpose(img_list[-1],(1,2,0)))
 plt.show()
-plt.savefig('%s/plots/real_vs_fake_images.png' % (opt.outf))
+plt.savefig('%s/img/samples/real_vs_fake_images.png' % (opt.outf))
