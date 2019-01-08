@@ -12,14 +12,15 @@ generator structure: The generator is comprised of convolutional-transpose layer
 Why do we use strided conv-transpose? 
 The strided conv-transpose layers allow the latent vector to be transformed into a volume with the same shape as an image.
 '''
-
+sys.path('../../torch')
 # load libraries
 from __future__ import print_function
 #%matplotlib inline
 import argparse
 import os
 import random
-import torch
+import torchls
+
 import torch.nn as nn
 import torch.nn.parallel
 import torch.backends.cudnn as cudnn
@@ -179,7 +180,7 @@ define the generator
 ---------------------------
 As a series of strided two dimensional convolutional transpose layers, each paired with a 2d batch norm layer and a relu activation.
 The output of the generator is fed through a tanh function to return it to the input data range of [−1,1]. It is worth noting the 
-existence of the batch norm functions after the conv-transpose layers, as this is a critical contribution of the DCGAN paper. These layers help with the flow of gradients during training. 
+existence of the batch norm functions after the conv-transpose layers, as this is a critical contribution of the DCGAN paper. These layers help with the flow of gradients during training.
 '''
 class Generator(nn.Module):
     def __init__(self, ngpu):
@@ -213,7 +214,7 @@ class Generator(nn.Module):
 
 # Create the generator
 netG = Generator(ngpu).to(device)
-
+print(device)
 # Handle multi-gpu if desired
 if (device.type == 'cuda') and (ngpu > 1):
     netG = nn.DataParallel(netG, list(range(ngpu)))
