@@ -70,13 +70,15 @@ parser.add_argument('--lr', type=float, default=0.0002, help='learning rate, def
 parser.add_argument('--beta1', type=float, default=0.5, help='beta1 for adam. default=0.5')
 parser.add_argument('--cuda', action='store_true', help='enables cuda')
 parser.add_argument('--ngpu', type=int, default=1, help='number of GPUs to use')
-parser.add_argument('--netG', default='', help="path to netG (to continue training)")
-parser.add_argument('--netD', default='', help="path to netD (to continue training)")
+parser.add_argument('--model', default='', help="path to model (to continue training)")
 parser.add_argument('--outf', default='.', help='folder to output images and model checkpoints')
 parser.add_argument('--manualSeed', type=int, help='manual seed')
 
 opt = parser.parse_args()
 print(opt)
+
+# load the checkpoint if training should be continued
+checkpoint = torch.load(opt.model)
 
 # make output dirs and files
 try:
@@ -223,9 +225,9 @@ if (device.type == 'cuda') and (ngpu > 1):
 netG.apply(weights_init)
 
 # load the model to continue training
-if opt.netG != '':
-    netG.load_state_dict(torch.load(opt.netG))
-print(netG)
+if opt.model != '':
+    netG.load_state_dict(checkpoint['netG'])
+    #netG.eval()
 
 # Print the model
 print(netG)
@@ -246,29 +248,63 @@ class Discriminator(nn.Module):
     def __init__(self, ngpu):
         super(Discriminator, self).__init__()
         self.ngpu = ngpu
-        self.main = nn.Sequential(
+        self.conv1 = nn.Sequential(
             # input is (nc) x 64 x 64
             nn.Conv2d(nc, ndf, 4, 2, 1, bias=False),
-            nn.LeakyReLU(0.2, inplace=True),
+            nn.LeakyReLU(0.2, inplace=True)
+        ) 
+        self.conv2 = nn.Sequential(
             # state size. (ndf) x 32 x 32
             nn.Conv2d(ndf, ndf * 2, 4, 2, 1, bias=False),
             nn.BatchNorm2d(ndf * 2),
-            nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf*2) x 16 x 16
+            nn.LeakyReLU(0.2, inplace=True)
+        ) 
+        self.conv3 = nn.Sequential(
+           # state size. (ndf*2) x 16 x 16
             nn.Conv2d(ndf * 2, ndf * 4, 4, 2, 1, bias=False),
             nn.BatchNorm2d(ndf * 4),
-            nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf*4) x 8 x 8
+            nn.LeakyReLU(0.2, inplace=True)
+        ) 
+        self.conv4 = nn.Sequential(
+           # state size. (ndf*4) x 8 x 8
             nn.Conv2d(ndf * 4, ndf * 8, 4, 2, 1, bias=False),
             nn.BatchNorm2d(ndf * 8),
-            nn.LeakyReLU(0.2, inplace=True),
+            nn.LeakyReLU(0.2, inplace=True)
+        ) 
+        self.conv5 = nn.Sequential(
             # state size. (ndf*8) x 4 x 4
             nn.Conv2d(ndf * 8, 1, 4, 1, 0, bias=False),
             nn.Sigmoid()
-        )
-
+        ) 
+    # forward propagation through the network
     def forward(self, input):
-        return self.main(input)
+        out_conv_1 = self.conv1(input)
+        out_conv_2 = self.conv2(out_conv_1)
+        out_conv_3 = self.conv3(out_conv_2)
+        out_conv_4 = self.conv4(out_conv_3)
+        out_conv_5 = self.conv5(out_conv_4)
+        return out_conv_5.view(-1, 1).squeeze(1)
+   
+    # get the features from the conv layers which can be used as input for the svm
+    def get_features(self,input):
+        out_conv_1 = self.conv1(input)
+        out_conv_2 = self.conv2(out_conv_1)
+        out_conv_3 = self.conv3(out_conv_2)
+        out_conv_4 = self.conv4(out_conv_3)
+        out_conv_5 = self.conv5(out_conv_4)
+
+        max_pool_1 = nn.MaxPool2d(int(out_conv_1.size(2) / 4))
+        max_pool_2 = nn.MaxPool2d(int(out_conv_2.size(2) / 4))
+        max_pool_3 = nn.MaxPool2d(int(out_conv_3.size(2) / 4))
+        max_pool_4 = nn.MaxPool2d(int(out_conv_4.size(2) / 4))
+
+        feature_vec_1 = max_pool_1(out_conv_1).view(input.size(0), -1).squeeze(1)
+        feature_vec_2 = max_pool_2(out_conv_2).view(input.size(0), -1).squeeze(1)
+        feature_vec_3 = max_pool_3(out_conv_3).view(input.size(0), -1).squeeze(1)
+        feature_vec_4 = max_pool_4(out_conv_5).view(input.size(0), -1).squeeze(1)
+        feature_vec_5 = out_conv_3.view(input.size(0), -1).squeeze(1)
+
+        return torch.cat((feature_vec_1,feature_vec_2,feature_vec_3,feature_vec_4,feature_vec_5),1)
     
 
 # Create the Discriminator
@@ -284,9 +320,9 @@ netD.apply(weights_init)
 
 # load the model to continue training
 
-if opt.netD != '':
-    netD.load_state_dict(torch.load(opt.netD))
-print(netD)
+if opt.model != '':
+    netD.load_state_dict(checkpoint['netD'])
+    #netD.eval()
 
 # Print the model
 print(netD)
@@ -317,6 +353,11 @@ fake_label = 0
 optimizerD = optim.Adam(netD.parameters(), lr=opt.lr, betas=(opt.beta1, 0.999))
 optimizerG = optim.Adam(netG.parameters(), lr=opt.lr, betas=(opt.beta1, 0.999))
 
+if opt.model != '':
+    optimizerD.load_state_dict(checkpoint['optimizerD'])
+    optimizerG.load_state_dict(checkpoint['optimizerG'])
+
+
 '''
 ---------------------------
 training the network
@@ -345,13 +386,21 @@ but this allows us to use the log(x) part of the BCELoss (rather than the log(1â
 
 # Lists to keep track of progress
 img_list = []
-G_losses = []
-D_losses = []
-iters = 0
 
+start_epoch = 0
+if opt.model != '':
+    start_epoch = checkpoint['epoch']
+    iters = checkpoint['iters']
+    G_losses = checkpoint['G_losses']
+    D_losses = checkpoint['D_losses']
+else :
+    G_losses = []
+    D_losses = []
+    iters = 0
+    
 print("Starting Training Loop...")
 # For each epoch
-for epoch in range(opt.niter):
+for epoch in range(start_epoch,opt.niter):
     # For each batch in the dataloader
     for i, data in enumerate(dataloader, 0):
 
@@ -429,8 +478,7 @@ for epoch in range(opt.niter):
 
         iters += 1
     # do checkpointing
-    torch.save(netG.state_dict(), '%s/models/netG_epoch_%d_run2.pth' % (opt.outf, epoch))
-    torch.save(netD.state_dict(), '%s/models/netD_epoch_%d_run2.pth' % (opt.outf, epoch))
+    torch.save({'netG': netG.state_dict(), 'netD': netD.state_dict(),'optimizerG': optimizerG.state_dict(), 'optimizerD': optimizerD.state_dict(), 'epoch': epoch, 'iters': iters , 'G_losses': G_losses, 'D_losses':D_losses}, '%s/models/model_%d.pth' % (opt.outf, epoch))
 
 
 # Generate a SVM. This SVM should use output of the conv2d layers as input and do classification
