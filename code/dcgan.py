@@ -147,7 +147,7 @@ dataloader = torch.utils.data.DataLoader(dataset, batch_size=opt.batchSize,
 
 # Decide which device we want to run on
 device = torch.device("cuda:0" if opt.cuda else "cpu")
-
+print(device)
 # Plot some training images
 real_batch = next(iter(dataloader))
 plt.figure(figsize=(8,8))
