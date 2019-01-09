@@ -470,10 +470,10 @@ for epoch in range(start_epoch,opt.niter):
             with torch.no_grad():
                 fake = netG(fixed_noise).detach().cpu()
                 vutils.save_image(real_cpu,
-                    '%s/img/plots/real_samples.png' % opt.outf,
+                    '%s/img/samples/real_samples.png' % opt.outf,
                     normalize=True)
                 vutils.save_image(fake.detach(),
-                    '%s/img/plots/fake_samples_epoch_%03d.png' % (opt.outf, epoch),
+                    '%s/img/samples/fake_samples_epoch_%03d.png' % (opt.outf, epoch),
                 normalize=True)
             img_list.append(vutils.make_grid(fake, padding=2, normalize=True))
 
