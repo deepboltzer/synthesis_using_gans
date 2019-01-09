@@ -390,7 +390,7 @@ img_list = []
 
 start_epoch = 0
 if opt.model != '':
-    start_epoch = checkpoint['epoch']
+    start_epoch = checkpoint['epoch']+1
     iters = checkpoint['iters']
     G_losses = checkpoint['G_losses']
     D_losses = checkpoint['D_losses']
