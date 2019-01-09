@@ -78,7 +78,8 @@ opt = parser.parse_args()
 print(opt)
 
 # load the checkpoint if training should be continued
-checkpoint = torch.load(opt.model)
+if opt.model != '':
+    checkpoint = torch.load(opt.model)
 
 # make output dirs and files
 try:
