@@ -40,6 +40,7 @@ parser.add_argument('--niter', type=int, default=25, help='number of epochs to t
 parser.add_argument('--lr', type=float, default=0.0002, help='learning rate, default=0.0002')
 parser.add_argument('--beta1', type=float, default=0.5, help='beta1 for adam. default=0.5')
 parser.add_argument('--cuda', action='store_true', help='enables cuda')
+parser.add_argument('--gpu',  type=int ,default=0, help='gpu device')
 parser.add_argument('--ngpu', type=int, default=1, help='number of GPUs to use')
 parser.add_argument('--model', default='', help="path to model (to continue training)")
 parser.add_argument('--svm', default='', help="train or validate with svm")
