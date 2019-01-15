@@ -217,10 +217,10 @@ img_list = []
 
 start_epoch = 0
 if opt.model != '':
-    start_epoch = checkpoint['epoch']+1
-    iters = checkpoint['iters']
-    G_losses = checkpoint['G_losses']
-    D_losses = checkpoint['D_losses']
+    start_epoch = arg_parser.checkpoint['epoch']+1
+    iters = arg_parser.checkpoint['iters']
+    G_losses = arg_parser.checkpoint['G_losses']
+    D_losses = arg_parser.checkpoint['D_losses']
 else :
     G_losses = []
     D_losses = []

@@ -34,7 +34,7 @@ class Generator(nn.Module):
         self.ngpu = ngpu
         self.main = nn.Sequential(
             # input is Z, going into a convolution
-            nn.ConvTranspose2d( nz, ngf * 8, 4, 1, 0, bias=False),
+            nn.ConvTranspose2d( nz, ngf * 8, 2, 1, 0, bias=False),
             nn.BatchNorm2d(ngf * 8),
             nn.ReLU(True),
             # state size. (ngf*8) x 4 x 4
@@ -100,7 +100,7 @@ class Discriminator(nn.Module):
         ) 
         self.conv5 = nn.Sequential(
             # state size. (ndf*8) x 4 x 4
-            nn.Conv2d(ndf * 8, 1, 4, 1, 0, bias=False),
+            nn.Conv2d(ndf * 8, 1, 2, 1, 0, bias=False),
             nn.Sigmoid()
         ) 
     # forward propagation through the network
@@ -123,14 +123,14 @@ class Discriminator(nn.Module):
         max_pool_1 = nn.MaxPool2d(int(out_conv_1.size(2) / 4))
         max_pool_2 = nn.MaxPool2d(int(out_conv_2.size(2) / 4))
         max_pool_3 = nn.MaxPool2d(int(out_conv_3.size(2) / 4))
-        max_pool_4 = nn.MaxPool2d(int(out_conv_4.size(2) / 4))
+        #max_pool_4 = nn.MaxPool2d(int(out_conv_4.size(2) / 4))
 
         feature_vec_1 = max_pool_1(out_conv_1).view(input.size(0), -1).squeeze(1)
         feature_vec_2 = max_pool_2(out_conv_2).view(input.size(0), -1).squeeze(1)
         feature_vec_3 = max_pool_3(out_conv_3).view(input.size(0), -1).squeeze(1)
-        feature_vec_4 = max_pool_4(out_conv_5).view(input.size(0), -1).squeeze(1)
-        feature_vec_5 = out_conv_3.view(input.size(0), -1).squeeze(1)
+        #feature_vec_4 = max_pool_4(out_conv_5).view(input.size(0), -1).squeeze(1)
+        #feature_vec_5 = out_conv_3.view(input.size(0), -1).squeeze(1)
 
-        return torch.cat((feature_vec_1,feature_vec_2,feature_vec_3,feature_vec_4,feature_vec_5),1)
+        return torch.cat((feature_vec_1,feature_vec_2,feature_vec_3),1)
     
 
