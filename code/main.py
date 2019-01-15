@@ -183,6 +183,7 @@ if opt.cuda:
     input, label = input.cuda(), label.cuda()
     noise, fixed_noise = noise.cuda(), fixed_noise.cuda()
 
+fixed_noise = Variable(fixed_noise)
 # Create batch of latent vectors that we will use to visualize
 #  the progression of the generator
 #fixed_noise = torch.randn(opt.batchSize, nz, 1, 1, device=device)
