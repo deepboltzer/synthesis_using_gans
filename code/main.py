@@ -308,7 +308,7 @@ for epoch in range(start_epoch,opt.niter):
         if i % 50 == 0:
             print('[%d/%d][%d/%d]\tLoss_D: %.4f\tLoss_G: %.4f\tD(x): %.4f\tD(G(z)): %.4f / %.4f'
                   % (epoch, opt.niter, i, len(dataloader),
-                     errD.item(), errG.data[0].item(), D_x, D_G_z1, D_G_z2))
+                     errD.item(), errG.item(), D_x, D_G_z1, D_G_z2))
 
         # Save Losses for plotting later
         G_losses.append(errG.item())
