@@ -255,7 +255,8 @@ for epoch in range(start_epoch,opt.niter):
         # Format batch
         real_cpu, _ = data
         batch_size = real_cpu.size(0)
-        real_cpu.cuda()
+        if opt.cuda:
+            real_cpu = real_cpu.cuda()
         input.resize_as_(real_cpu).copy_(real_cpu)
         label.resize_(batch_size).fill_(real_label)
         inputv = Variable(input)
