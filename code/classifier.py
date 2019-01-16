@@ -37,8 +37,8 @@ if __name__ == '__main__':
         
         # Handle multi-gpu if desired
         netD = dcgan.Generator(opt.ngpu).to(device)
-        if (device.type == 'cuda') and (opt.ngpu > 1):
-            netD = nn.DataParallel(netD, list(range(opt.ngpu)))
+        #if (device.type == 'cuda') and (opt.ngpu > 1):
+        netD = nn.DataParallel(netD, list(range(opt.ngpu)))
 
         def weights_init(m):
             classname = m.__class__.__name__
