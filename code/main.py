@@ -69,7 +69,7 @@ if opt.dataset in ['imagenet','celebA']:
                                ]))
     nc=3
 elif opt.dataset == 'conference_room':
-    dataset = dset.LSUN(db_path=opt.dataroot, classes=['conference_room_train'],
+    dataset = dset.LSUN(root=opt.dataroot, classes=['conference_room_train'],
                         transform=transforms.Compose([
                             transforms.Resize(opt.imageSize),
                             transforms.CenterCrop(opt.imageSize),
