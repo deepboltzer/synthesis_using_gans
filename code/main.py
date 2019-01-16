@@ -131,6 +131,7 @@ netG.apply(weights_init)
 # load the model to continue training
 if opt.model != '':
     netG.load_state_dict(arg_parser.checkpoint['netG'])
+    netG.train()
 
 # Print the model
 print(netG)
@@ -150,7 +151,7 @@ netD.apply(weights_init)
 
 if opt.model != '':
     netD.load_state_dict(arg_parser.checkpoint['netD'])
-    #netD.eval()
+    netD.train()
 
 # Print the model
 print(netD)
