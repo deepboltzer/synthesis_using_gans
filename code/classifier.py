@@ -60,9 +60,9 @@ if __name__ == '__main__':
         # Genrate the feature vector for each pic in the data
         for i, data in enumerate(dataloader):
             images, label = data
-            images = images.to(device)
+            images = images
             input.resize_as_(images).copy_(images)
-            input_vector = Variable(input)
+            input_vector = Variable(input).to(device)
 
             feature = netD.get_features(input_vector)
             feature = feature.data.cpu().numpy()
