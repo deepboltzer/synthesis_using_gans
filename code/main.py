@@ -34,6 +34,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from IPython.display import HTML
 from sklearn import svm
+import lmdb
 
 opt = arg_parser.opt
 
