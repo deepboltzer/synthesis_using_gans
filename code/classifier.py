@@ -64,7 +64,7 @@ if __name__ == '__main__':
             input.resize_as_(images).copy_(images)
             input_vector = Variable(input).to(device)
 
-            feature = netD.get_features(images)
+            feature = netD.get_features(input_vector)
             feature = feature.data.cpu().numpy()
             feature = feature.astype(np.float16)
 
