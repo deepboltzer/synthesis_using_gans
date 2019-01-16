@@ -196,10 +196,11 @@ fake_label = 0
 optimizerD = optim.Adam(netD.parameters(), lr=opt.lr, betas=(opt.beta1, 0.999))
 optimizerG = optim.Adam(netG.parameters(), lr=opt.lr, betas=(opt.beta1, 0.999))
 
+'''
 if opt.model != '':
     optimizerD.load_state_dict(arg_parser.checkpoint['optimizerD'])
     optimizerG.load_state_dict(arg_parser.checkpoint['optimizerG'])
-
+'''
 
 '''
 ---------------------------
