@@ -4,6 +4,7 @@ import torch.utils.data
 from torch.autograd import Variable
 import torchvision.datasets as dset
 import torchvision.transforms as transforms
+import torch.nn as nn
 import dcgan
 from arg_parser import opt
 import arg_parser
@@ -32,15 +33,19 @@ if __name__ == '__main__':
 
         dataloader = torch.utils.data.DataLoader(dataset, batch_size=opt.batchSize,
                                                  shuffle=True, num_workers=int(opt.workers))
+        device = torch.device("cuda:" + str(opt.gpu) if opt.cuda else "cpu")
+        
+        # Handle multi-gpu if desired
+        netD = dcgan.Generator(opt.ngpu).to(device)
+        if (device.type == 'cuda') and (opt.ngpu > 1):
+            netD = nn.DataParallel(netD, list(range(opt.ngpu)))
 
         # Load the Generator from the model 
-        netD = dcgan.Generator(opt.ngpu)
         if opt.model == '':
             print('------- This code assumes that you load a model of a Generator -------')
             exit(-1)
         else :
             netD.load_state_dict(arg_parser.checkpoint['netD'])
-        print(netD)
         netD.cuda()
 
         number = len(os.listdir(opt.outf))
