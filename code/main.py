@@ -68,8 +68,8 @@ if opt.dataset in ['imagenet','celebA']:
                                    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
                                ]))
     nc=3
-elif opt.dataset == 'kitchen':
-    dataset = dset.LSUN(root=opt.dataroot, classes=['kitchen_train'],
+elif opt.dataset == 'conference_room':
+    dataset = dset.LSUN(root=opt.dataroot, classes=['conference_room_train'],
                         transform=transforms.Compose([
                             transforms.Resize(opt.imageSize),
                             transforms.CenterCrop(opt.imageSize),

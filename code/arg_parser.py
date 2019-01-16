@@ -53,7 +53,7 @@ print(opt)
 # load the checkpoint if training should be continued
 if opt.model != '':
     checkpoint = torch.load(opt.model)
-
+print(checkpoint)
 # make output dirs and files
 try:
     os.makedirs(opt.outf)
