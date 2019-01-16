@@ -133,7 +133,7 @@ class Discriminator(nn.Module):
 
         print(feature_vec_3)
         print(feature_vec_4)
-        print(feature_vec_5)
+
 
         return torch.cat((feature_vec_1,feature_vec_2,feature_vec_3,feature_vec_4),1)
     
