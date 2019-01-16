@@ -125,10 +125,10 @@ class Discriminator(nn.Module):
         max_pool_3 = nn.MaxPool2d(int(out_conv_3.size(2) / 4))
         max_pool_4 = nn.MaxPool2d(int(out_conv_4.size(2) / 4))
 
-        feature_vec_1 = max_pool_1(out_conv_1).view(input.size(0), -1).squeeze(1).view(-1, 1)
-        feature_vec_2 = max_pool_2(out_conv_2).view(input.size(0), -1).squeeze(1).view(-1, 1)
-        feature_vec_3 = max_pool_3(out_conv_3).view(input.size(0), -1).squeeze(1).view(-1, 1)
-        feature_vec_4 = max_pool_4(out_conv_5).view(input.size(0), -1).squeeze(1).view(-1, 1)
+        feature_vec_1 = max_pool_1(out_conv_1).view(input.size(0), -1).squeeze(1)
+        feature_vec_2 = max_pool_2(out_conv_2).view(input.size(0), -1).squeeze(1)
+        feature_vec_3 = max_pool_3(out_conv_3).view(input.size(0), -1).squeeze(1)
+        feature_vec_4 = max_pool_4(out_conv_5).view(input.size(0), -1).squeeze(1)
         #feature_vec_5 = out_conv_3.view(input.size(0), -1).view(-1, 1).squeeze(1)
 
         print(feature_vec_3)
