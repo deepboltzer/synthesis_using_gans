@@ -37,6 +37,7 @@ if __name__ == '__main__':
         
         # Handle multi-gpu if desired
         netD = dcgan.Discriminator(opt.ngpu).to(device)
+
         if (device.type == 'cuda') and (opt.ngpu > 1):
             netD = nn.DataParallel(netD, list(range(opt.ngpu)))
 
@@ -59,7 +60,7 @@ if __name__ == '__main__':
         # Genrate the feature vector for each pic in the data
         for i, data in enumerate(dataloader):
             images, label = data
-            images = images.cuda()
+            images = images.to(device)
             input.resize_as_(images).copy_(images)
             input_vector = Variable(input)
 
