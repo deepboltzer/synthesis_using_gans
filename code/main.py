@@ -131,9 +131,9 @@ netG.apply(weights_init)
 # load the model to continue training
 if opt.model != '':
     netG.load_state_dict(arg_parser.checkpoint['netG'])
-    netG.train()
 
 # Print the model
+print(netG)
 print(netG)
 
 # Create the Discriminator
@@ -151,7 +151,6 @@ netD.apply(weights_init)
 
 if opt.model != '':
     netD.load_state_dict(arg_parser.checkpoint['netD'])
-    netD.train()
 
 # Print the model
 print(netD)
@@ -196,11 +195,11 @@ fake_label = 0
 optimizerD = optim.Adam(netD.parameters(), lr=opt.lr, betas=(opt.beta1, 0.999))
 optimizerG = optim.Adam(netG.parameters(), lr=opt.lr, betas=(opt.beta1, 0.999))
 
-'''
+
 if opt.model != '':
     optimizerD.load_state_dict(arg_parser.checkpoint['optimizerD'])
     optimizerG.load_state_dict(arg_parser.checkpoint['optimizerG'])
-'''
+
 
 '''
 ---------------------------
