@@ -60,7 +60,7 @@ if __name__ == '__main__':
         # Genrate the feature vector for each pic in the data
         for i, data in enumerate(dataloader):
             images, label = data
-            images = images
+            images = images.to(device)
             input.resize_as_(images).copy_(images)
             input_vector = Variable(input).to(device)
 
