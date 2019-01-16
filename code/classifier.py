@@ -46,8 +46,6 @@ if __name__ == '__main__':
             exit(-1)
         else :
             netD.load_state_dict(arg_parser.checkpoint['netD'])
-        netD.cuda()
-
         number = len(os.listdir(opt.outf))
 
         # Set the model of the generator to evaluation
