@@ -1,3 +1,4 @@
 data
 results_lsun/models
-data/disc_features/50_features_food_101 
+data/disc_features/50_features_food_101
+results_celebA/models
