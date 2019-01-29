@@ -157,8 +157,22 @@
     \end{block}
         \begin{block}{The Experiment:}
 	\begin{itemize}
-	\item Train a DCGAN on the IMAGENET-1K dataset. Use the discriminator as feature extractor for food-101. 
-	\item Use the output of all the convolutional layers of the discriminator as feature extractor and train a linear SVM on food-101.
+	\item Train a DCGAN on the IMAGENET-1K dataset. Use the \textbf{discriminator} as feature extractor for food-101. 
+	\item Use the output of all the convolutional layers of the \textbf{discriminator} as feature extractor and train a linear SVM on food-101.
+  \end{itemize}
+    \end{block}
+\end{frame}
+}
+{
+\metroset{titleformat frame=allcaps}
+\begin{frame}{Results Classification on Food-101}
+      \begin{block}{Overall accuracy}
+	\begin{itemize}[<+- | alert@+>]
+    \item We tested the \textbf{discriminator} as feature extractor on the whole food-101 dataset (101.000 pictures in 101 categories) and on 10 random categories.
+    \item To measure our classification results we used the models overall \textbf{accurracy} and \textbf{precision} and \textbf{recall} on each of datasets classes. 
+    \item While \textbf{recall} expresses the ability to find all relevant instances in a dataset, \textbf{precision} expresses the proportion of the data points our model says was relevant actually were relevant.
+    $$ recall = \frac{tp}{tp + fn} $$
+    $$ precision = \frac{tp}{tp + fp}$$
   \end{itemize}
     \end{block}
 \end{frame}
@@ -169,12 +183,128 @@
 \begin{frame}{Results Classification on Food-101}
 \begin{figure}[htbp] 
   \centering
-     \includegraphics[width=1.0\textwidth]{pic/structure_dcgan.png}
-  \caption{DCGAN network}
+     \includegraphics[width=1.0\textwidth]{pic/precision_recall_full.PNG}
+  \caption{precision vs. recall over all 101 food categories }
   \label{fig:Bild1}
 \end{figure}
 \end{frame}
 }
+
+{
+\metroset{titleformat frame=allcaps}
+\begin{frame}{Results Classification on Food-101}
+\begin{figure}[htbp] 
+  \centering
+     \includegraphics[width=1.0\textwidth]{pic/precision_recall_10_classes.PNG}
+  \caption{precision vs. recall over 10 random food categories }
+  \label{fig:Bild1}
+\end{figure}
+\end{frame}
+}
+
+\section{Experiment 2: LSUN conference-room}
+
+{
+\metroset{titleformat frame=allcaps}
+\begin{frame}{LSUN conference-room}
+      \begin{block}{The Data:}
+	\begin{itemize}
+    \item LSUN conference room: 229.069 images of conference-rooms
+  \end{itemize}
+    \end{block}
+        \begin{block}{The Experiment:}
+	\begin{itemize}
+	\item Train a \textbf{Generator} on the LSUN conference-room dataset. 
+  \end{itemize}
+    \end{block}
+\end{frame}
+}
+
+{
+\metroset{titleformat frame=allcaps}
+\begin{frame}{LSUN conference-room}
+      \begin{block}{Generator and Discriminator losses}
+	\begin{itemize}[<+- | alert@+>]
+    \item \textbf{$Loss_D$} : \textbf{discriminator loss} calculated as the sum of losses for the all real and all fake batches $ \log(D(x))+\log(D(G(z)))$.
+    \item \textbf{$Loss_G$}: \textbf{generator loss} calculated as $\log(D(G(z)))$
+  \end{itemize}
+    \end{block}   
+\begin{figure}[htbp] 
+  \centering
+     \includegraphics[width=1.0\textwidth]{pic/lsun_losses.png}
+  \caption{Generator and discriminator loss during training }
+  \label{fig:Bild1}
+\end{figure} 
+\end{frame}
+}
+
+{
+\metroset{titleformat frame=allcaps}
+\begin{frame}{LSUN conference-room Real vs. Fake}
+\begin{figure}[htbp] 
+  \centering
+     \includegraphics[width=0.65\textwidth,height=0.65\textwidth]{pic/lsun_real.PNG}
+  \caption{Real samples from the LSUN conference-room dataset }
+  \label{fig:Bild1}
+\end{figure}
+\end{frame}
+}
+
+{
+\metroset{titleformat frame=allcaps}
+\begin{frame}{LSUN conference-room Real vs. Fake}
+\begin{figure}[htbp] 
+  \centering
+     \includegraphics[width=0.65\textwidth,height=0.65\textwidth]{pic/lsun_fake.PNG}
+  \caption{Fake samples after 25 epochs }
+  \label{fig:Bild1}
+\end{figure}
+\end{frame}
+}
+
+\section{Experiment 3: Vector arithmetics for celebA}
+
+{
+\metroset{titleformat frame=allcaps}
+\begin{frame}{Vector arithmetics for celebA}
+      \begin{block}{The Data:}
+	\begin{itemize}
+    \item celebA faces dataset: 10.177 number of identities
+    , 202.599 number of face images
+  \end{itemize}
+    \end{block}
+        \begin{block}{The Experiment:}
+	\begin{itemize}
+	\item Train a \textbf{DCGAN} on the celebA faces dataset. Take two sets of 3 normal distributed sample vectors $A$ and $B$. Calculate both subsets means ($mean(A)$ and $mean(B)$). Then return the \textbf{generator's} output of $mean(a) + mean(B)$.
+  \end{itemize}
+    \end{block}
+\end{frame}
+}
+
+{
+\metroset{titleformat frame=allcaps}
+\begin{frame}{Results Vector arithmetics for celebA}
+\begin{figure}[htbp] 
+  \centering
+     \includegraphics[width=0.65\textwidth,height=0.65\textwidth]{pic/experiment_2.png}
+  \caption{Means }
+  \label{fig:Bild1}
+\end{figure}
+\end{frame}
+}
+
+{
+\metroset{titleformat frame=allcaps}
+\begin{frame}{Results Vector arithmetics for celebA}
+\begin{figure}[htbp] 
+  \centering
+     \includegraphics[width=0.65\textwidth,height=0.65\textwidth]{pic/A_B_experiment_2.png}
+  \caption{Sum of the means }
+  \label{fig:Bild1}
+\end{figure}
+\end{frame}
+}
+
 
 \begin{frame}[standout]
   Questions?
